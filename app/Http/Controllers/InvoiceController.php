@@ -14,16 +14,6 @@ class InvoiceController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request) {
-		/*return $request->all();
-			$invoice = new Invoice;
-			$invoice->invoice_no = $request->invoice_no;
-			$invoice->client_id = $request->client;
-			$invoice->invoice_date = $request->invoice_date;
-			$invoice->grand_total = $request->grand_total;
-			$invoice->due_date = $request->due_date;
-			$invoice->user_id = Auth::id();
-			$invoice->save();
-		*/
 		$this->validate($request, [
 			'invoice_no' => 'required|alpha_dash|unique:invoices',
 			'client' => 'required|max:255',
@@ -72,16 +62,49 @@ class InvoiceController extends Controller {
 	 * @param  \App\Invoice  $invoice
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(Request $request, Invoice $invoice) {
-		// return $request->all();
-		$invoice = Invoice::find($request->id);
-		$invoice->invoice_no = $request->invoice_no;
-		$invoice->client_id = $request->client;
-		$invoice->invoice_date = $request->invoice_date;
-		$invoice->grand_total = $request->grand_total;
-		$invoice->due_date = $request->due_date;
-		$invoice->save();
-		return $invoice;
+	public function update(Request $request, $id) {
+		$this->validate($request, [
+			'invoice_no' => 'required|alpha_dash|unique:invoices,invoice_no,' . $id . ',id',
+			'client' => 'required|max:255',
+			// 'client_address' => 'required|max:255',
+			'invoice_date' => 'required|date_format:Y-m-d',
+			'due_date' => 'required|date_format:Y-m-d',
+			'title' => 'required|max:255',
+			'discount' => 'required|numeric|min:0',
+			'products.*.name' => 'required|max:255',
+			'products.*.price' => 'required|numeric|min:1',
+			'products.*.qty' => 'required|integer|min:1',
+		]);
+
+		$invoice = Invoice::findOrFail($id);
+
+		$products = collect($request->products)->transform(function ($product) {
+			$product['total'] = $product['qty'] * $product['price'];
+			return new InvoiceProduct($product);
+		});
+
+		if ($products->isEmpty()) {
+			return response()
+				->json([
+					'products_empty' => ['One or more Product is required.'],
+				], 422);
+		}
+
+		$data = $request->except('products');
+		$data['sub_total'] = $products->sum('total');
+		$data['grand_total'] = $data['sub_total'] - $data['discount'];
+
+		$invoice->update($data);
+
+		InvoiceProduct::where('invoice_id', $invoice->id)->delete();
+
+		$invoice->products()->saveMany($products);
+
+		return response()
+			->json([
+				'updated' => true,
+				'id' => $invoice->id,
+			]);
 	}
 
 	/**
@@ -95,6 +118,7 @@ class InvoiceController extends Controller {
 	}
 
 	public function getInvoice() {
-		return Invoice::all();
+		// return Invoice::all();
+		return Invoice::with('products')->get();
 	}
 }

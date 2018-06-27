@@ -12,14 +12,6 @@ class CreateInvoicesTable extends Migration {
 	 */
 	public function up() {
 		Schema::create('invoices', function (Blueprint $table) {
-			/*$table->increments('id');
-				$table->integer('user_id');
-				$table->integer('client_id');
-				$table->string('invoice_no');
-				$table->integer('grand_total');
-				$table->date('invoice_date');
-				$table->date('due_date');
-			*/
 			$table->increments('id');
 			$table->string('invoice_no');
 			$table->date('invoice_date');

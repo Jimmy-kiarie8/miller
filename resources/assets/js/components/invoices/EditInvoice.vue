@@ -57,6 +57,58 @@
                           </select>
                       </div>
                     </div>
+
+
+                    <table class="table table-bordered table-form">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="product in invoiceData.products">
+                                <td class="table-name">
+                                    <textarea class="table-control" v-model="product.name"></textarea>
+                                </td>
+                                <td class="table-price">
+                                    <input type="text" class="table-control"  v-model="product.price">
+                                </td>
+                                <td class="table-qty">
+                                    <input type="text" class="table-control" v-model="product.qty">
+                                </td>
+                                <td class="table-total">
+                                    <span class="table-text">@{{product.qty * product.price}}</span>
+                                </td>
+                                <td class="table-remove">
+                                    <span @click="remove(product)" class="table-remove-btn">&times;</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="table-empty" colspan="2">
+                                    <span @click="addLine" class="table-add_line">Add Line</span>
+                                </td>
+                                <td class="table-label">Sub Total</td>
+                                <td class="table-amount">@{{subTotal}}</td>
+                            </tr>
+                            <tr>
+                                <td class="table-empty" colspan="2"></td>
+                                <td class="table-label">Discount</td>
+                                <td class="table-discount">
+                                    <input type="text" class="table-discount_input" v-model="invoiceData.discount">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="table-empty" colspan="2"></td>
+                                <td class="table-label">Grand Total</td>
+                                <td class="table-amount">@{{grandTotal}}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </v-layout>
               </v-container>
               <v-card-actions>
@@ -106,7 +158,7 @@ export default {
   methods: {
     save() {
       this.loading=true
-      axios.patch('/invoice', this.$data.list).
+      axios.patch(`/invoice/${this.invoiceData.id}`, this.invoiceData).
       then((response) => {
         this.loading=false
         console.log(response.data);
@@ -121,6 +173,12 @@ export default {
         this.errors = error.response.data.errors
       })
     },
+    addLine: function() {
+      this.form.products.push({name: '', price: 0, qty: 1});
+    },
+    remove: function(product) {
+      this.form.products.$remove(product);
+    },
     /*resetForm () {
       this.form = Object.assign({}, this.defaultForm)
       this.$refs.form.reset()
@@ -130,7 +188,17 @@ export default {
     },
 
   },
- mounted() {
- }
+
+  computed: {
+
+   subTotal: function() {
+     return this.invoiceData.products.reduce(function(carry, product) {
+       return carry + (parseFloat(product.qty) * parseFloat(product.price));
+     }, 0);
+   },
+   grandTotal: function() {
+     return this.subTotal - parseFloat(this.invoiceData.discount);
+   }
+ },
 }
 </script>

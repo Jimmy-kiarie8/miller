@@ -16,12 +16,12 @@
 					<thead>
 						<tr>
 							<th scope="col">#</th>
-							<th scope="col">receipt Number</th>
+							<th scope="col">Receipt Number</th>
 							<th scope="col">Grand Total</th>
 							<th scope="col">Client</th>
 							<th scope="col">Due Date</th>
 							<th scope="col">Created On</th>
-							<th scope="col">receipt Date</th>
+							<th scope="col">Receipt Date</th>
 							<th scope="col">Action</th>
 						</tr>
 					</thead>
@@ -36,7 +36,7 @@
 							<td>{{receipt.receipt_date}}</td>
 							<td>
 								<v-btn @click="receiptEdit(receipt)" flat color="primary">Edit</v-btn>
-								<v-btn @click="receiptShow(receipt.id)" flat color="info">View</v-btn>
+								<v-btn @click="receiptShow(receipt)" flat color="info">View</v-btn>
 								<v-btn @click="receiptdel(key, receipt.id)" flat color="danger">Delete</v-btn>
 							</td>
 						</tr>
@@ -59,18 +59,17 @@
 	</v-content>
 	<AddReceipt @closeRequest="close" :openAddRequest="dispAdd" @alertRequest="showAlert" :buyers="AllBuyers"></AddReceipt>
 	<EditReceipt @closeRequest="close" :openAddRequest="dispEdit" @alertRequest="showAlert" :buyers="AllBuyers" :receiptData="editReceipt"></EditReceipt>
-	<!-- <Showreceipt @closeRequest="close" :openAddRequest="dispShow" @alertRequest="showAlert"></Showreceipt> -->
+	<ShowReceipt @closeRequest="close" :openAddRequest="dispShow" @alertRequest="showAlert" :receipt="editReceipt"></ShowReceipt>
 </div>
 </template>
 
 <script>
 let AddReceipt = require('./AddReceipt');
 let EditReceipt = require('./EditReceipt');
-// let Showreceipt = require('./Showreceipt');
+let ShowReceipt = require('./ShowReceipt');
 export default{
 	components: {
-		AddReceipt, EditReceipt
-		// , Showreceipt
+		AddReceipt, EditReceipt, ShowReceipt
 	},
 	data() {
 		return{
@@ -90,7 +89,7 @@ export default{
 	}, 
 	methods: {
 		receiptEdit(receipt) {
-			console.log(receipt);
+			// console.log(receipt);
 		  this.editReceipt = Object.assign({}, receipt)
 		  this.editedIndex = this.receipts.indexOf(receipt)
 		  // console.log(this.editedItem);
@@ -103,8 +102,12 @@ export default{
       	this.$children[2].list = this.receipts[key]
 			this.dispEdit  = true
 		},*/
-		receiptShow(){
-      	this.$children[3].list = this.receipts[key]
+		receiptShow(receipt){
+			this.editReceipt = Object.assign({}, receipt)
+		  this.editedIndex = this.receipts.indexOf(receipt)
+		  // console.log(this.editedItem);
+		  this.dispShow = true
+      	// this.$children[3].list = this.receipts[key]
 			this.dispShow  = true
 		},
 		editItem(item) {

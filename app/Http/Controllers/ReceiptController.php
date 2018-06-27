@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Receipt;
+use App\ReceiptProduct;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ReceiptController extends Controller {
 	/**
@@ -14,16 +14,45 @@ class ReceiptController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request) {
-		return $request->all();
-		$receipt = new Receipt;
-		$receipt->receipt_no = $request->receipt_no;
-		$receipt->client_id = $request->client;
-		$receipt->receipt_date = $request->receipt_date;
-		$receipt->grand_total = $request->grand_total;
-		$receipt->due_date = $request->due_date;
-		$receipt->user_id = Auth::id();
-		$receipt->save();
-		return $receipt;
+		$this->validate($request, [
+			'receipt_no' => 'required|alpha_dash|unique:receipts',
+			'client' => 'required|max:255',
+			// 'client_address' => 'required|max:255',
+			'receipt_date' => 'required|date_format:Y-m-d',
+			'due_date' => 'required|date_format:Y-m-d',
+			'title' => 'required|max:255',
+			'discount' => 'required|numeric|min:0',
+			'products.*.name' => 'required|max:255',
+			'products.*.price' => 'required|numeric|min:1',
+			'products.*.qty' => 'required|integer|min:1',
+		]);
+
+		$products = collect($request->products)->transform(function ($product) {
+			$product['total'] = $product['qty'] * $product['price'];
+			return new ReceiptProduct($product);
+		});
+		// var_dump($products);die;
+
+		if ($products->isEmpty()) {
+			return response()
+				->json([
+					'products_empty' => ['One or more Product is required.'],
+				], 422);
+		}
+
+		$data = $request->except('products');
+		$data['sub_total'] = $products->sum('total');
+		$data['grand_total'] = $data['sub_total'] - $data['discount'];
+
+		$receipt = Receipt::create($data);
+
+		$receipt->products()->saveMany($products);
+
+		return response()
+			->json([
+				'created' => true,
+				'id' => $receipt->id,
+			]);
 	}
 
 	/**
@@ -35,14 +64,48 @@ class ReceiptController extends Controller {
 	 */
 	public function update(Request $request, Receipt $receipt) {
 		// return $request->all();
-		$receipt = Receipt::find($request->id);
-		$receipt->receipt_no = $request->receipt_no;
-		$receipt->client_id = $request->client;
-		$receipt->receipt_date = $request->receipt_date;
-		$receipt->grand_total = $request->grand_total;
-		$receipt->due_date = $request->due_date;
-		$receipt->save();
-		return $receipt;
+		$this->validate($request, [
+			'receipt_no' => 'required|alpha_dash|unique:receipts,receipt_no,' . $id . ',id',
+			'client' => 'required|max:255',
+			// 'client_address' => 'required|max:255',
+			'receipt_date' => 'required|date_format:Y-m-d',
+			'due_date' => 'required|date_format:Y-m-d',
+			'title' => 'required|max:255',
+			'discount' => 'required|numeric|min:0',
+			'products.*.name' => 'required|max:255',
+			'products.*.price' => 'required|numeric|min:1',
+			'products.*.qty' => 'required|integer|min:1',
+		]);
+
+		$receipt = Receipt::findOrFail($id);
+
+		$products = collect($request->products)->transform(function ($product) {
+			$product['total'] = $product['qty'] * $product['price'];
+			return new ReceiptProduct($product);
+		});
+
+		if ($products->isEmpty()) {
+			return response()
+				->json([
+					'products_empty' => ['One or more Product is required.'],
+				], 422);
+		}
+
+		$data = $request->except('products');
+		$data['sub_total'] = $products->sum('total');
+		$data['grand_total'] = $data['sub_total'] - $data['discount'];
+
+		$receipt->update($data);
+
+		ReceiptProduct::where('receipt_id', $receipt->id)->delete();
+
+		$receipt->products()->saveMany($products);
+
+		return response()
+			->json([
+				'updated' => true,
+				'id' => $receipt->id,
+			]);
 	}
 
 	/**
@@ -56,6 +119,6 @@ class ReceiptController extends Controller {
 	}
 
 	public function getReceipts() {
-		return Receipt::all();
+		return Receipt::with('products')->get();
 	}
 }

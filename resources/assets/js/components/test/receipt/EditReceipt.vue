@@ -15,7 +15,7 @@
                       <v-text-field
                       v-model="receiptData.receipt_no"
                       color="blue darken-2"
-                      label="Invoice Number"
+                      label="Receipt Number"
                       required
                       ></v-text-field>
                       <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
@@ -32,9 +32,9 @@
                     </v-flex>
                     <v-flex xs12 sm6>
                       <v-text-field
-                      v-model="receiptData.invoice_date"
+                      v-model="receiptData.receipt_date"
                       color="blue darken-2"
-                      label="Invoice Date"
+                      label="Receipt Date"
                       type='date'
                       required
                       ></v-text-field>
@@ -57,58 +57,6 @@
                           </select>
                       </div>
                     </div>
-
-
-                    <table class="table table-bordered table-form">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="product in receiptData.products">
-                                <td class="table-name">
-                                    <textarea class="table-control" v-model="product.name"></textarea>
-                                </td>
-                                <td class="table-price">
-                                    <input type="text" class="table-control"  v-model="product.price">
-                                </td>
-                                <td class="table-qty">
-                                    <input type="text" class="table-control" v-model="product.qty">
-                                </td>
-                                <td class="table-total">
-                                    <span class="table-text">@{{product.qty * product.price}}</span>
-                                </td>
-                                <td class="table-remove">
-                                    <span @click="remove(product)" class="table-remove-btn">&times;</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td class="table-empty" colspan="2">
-                                    <span @click="addLine" class="table-add_line">Add Line</span>
-                                </td>
-                                <td class="table-label">Sub Total</td>
-                                <td class="table-amount">@{{subTotal}}</td>
-                            </tr>
-                            <tr>
-                                <td class="table-empty" colspan="2"></td>
-                                <td class="table-label">Discount</td>
-                                <td class="table-discount">
-                                    <input type="text" class="table-discount_input" v-model="receiptData.discount">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="table-empty" colspan="2"></td>
-                                <td class="table-label">Grand Total</td>
-                                <td class="table-amount">@{{grandTotal}}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
                 </v-layout>
               </v-container>
               <v-card-actions>
@@ -141,7 +89,7 @@ export default {
     /*const defaultForm = Object.freeze({
       grand_total: '',
       receipt_no: '',
-      invoice_date: '',
+      receipt_date: '',
       due_date: '',
       client: '',
     })*/
@@ -158,26 +106,20 @@ export default {
   methods: {
     save() {
       this.loading=true
-      axios.patch(`/receipt/${this.receiptData.id}`, this.receiptData).
+      axios.patch('/receipt', this.$data.form).
       then((response) => {
         this.loading=false
         console.log(response.data);
         // this.close;
         // this.$emit('closeRequest');
         this.$emit('alertRequest');
-            Object.assign(this.$parent.invoices[this.$parent.editedIndex], this.$parent.editedItem)
+            Object.assign(this.$parent.receipts[this.$parent.editedIndex], this.$parent.editedItem)
 
       })
       .catch((error) => {
         this.loading=false
         this.errors = error.response.data.errors
       })
-    },
-    addLine: function() {
-      this.form.products.push({name: '', price: 0, qty: 1});
-    },
-    remove: function(product) {
-      this.form.products.$remove(product);
     },
     /*resetForm () {
       this.form = Object.assign({}, this.defaultForm)
@@ -188,17 +130,7 @@ export default {
     },
 
   },
-
-  computed: {
-
-   subTotal: function() {
-     return this.receiptData.products.reduce(function(carry, product) {
-       return carry + (parseFloat(product.qty) * parseFloat(product.price));
-     }, 0);
-   },
-   grandTotal: function() {
-     return this.subTotal - parseFloat(this.receiptData.discount);
-   }
- },
+ mounted() {
+ }
 }
 </script>

@@ -13,12 +13,15 @@ class CreateReceiptsTable extends Migration {
 	public function up() {
 		Schema::create('receipts', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('user_id');
-			$table->integer('client_id');
 			$table->string('receipt_no');
-			$table->integer('grand_total');
 			$table->date('receipt_date');
 			$table->date('due_date');
+			$table->string('title');
+			$table->string('client')->nullable();
+			$table->string('client_address')->nullable();
+			$table->decimal('sub_total');
+			$table->decimal('discount');
+			$table->decimal('grand_total');
 			$table->timestamps();
 		});
 	}
