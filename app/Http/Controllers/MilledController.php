@@ -65,4 +65,9 @@ class MilledController extends Controller
     {
         return Milled::all();
     }
+
+    public function getMillerSort(Request $request)
+    {
+        return Milled::whereBetween('created_at', [$request->start_date, $request->end_date])->get();
+    }
 }

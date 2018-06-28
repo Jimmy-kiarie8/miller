@@ -80483,7 +80483,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.content--wrap[data-v-1f40d795]{\r\n margin-top: -100px\n}\n#profile[data-v-1f40d795] { \r\n width: 70px;\r\n height: 60px;\r\n border-radius: 50%;\r\n margin-left: 80px;\r\n margin-top: -30px;\n}\ni[data-v-1f40d795]{\r\n padding: 7px;\r\n background: #f0f0f0;\r\n border-radius: 50%;\n}\n.list-group-item[data-v-1f40d795]:hover, .list-group-item[data-v-1f40d795]:focus {\r\n z-index: 1;\r\n background: #f9f9f9;\r\n text-decoration: none;\n}\r\n", ""]);
+exports.push([module.i, "\n.content--wrap[data-v-1f40d795]{\r\n  margin-top: -100px\n}\n#profile[data-v-1f40d795] { \r\n  width: 70px;\r\n  height: 60px;\r\n  border-radius: 50%;\r\n  margin-left: 80px;\r\n  margin-top: -30px;\n}\ni[data-v-1f40d795]{\r\n  padding: 7px;\r\n  background: #f0f0f0;\r\n  border-radius: 50%;\n}\n.list-group-item[data-v-1f40d795]:hover, .list-group-item[data-v-1f40d795]:focus {\r\n  z-index: 1;\r\n  background: #f9f9f9;\r\n  text-decoration: none;\n}\r\n", ""]);
 
 // exports
 
@@ -80494,6 +80494,25 @@ exports.push([module.i, "\n.content--wrap[data-v-1f40d795]{\r\n margin-top: -100
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -80593,6 +80612,10 @@ var EditMiller = __webpack_require__(135);
     return {
       headers: [{ text: 'Code', align: 'left', value: 'code' }, { text: 'Grower Name', value: 'grower_name' }, { text: 'Remarks', value: 'remarks' }, { text: 'Number Of Porkets', value: 'no_of_pockets' }, { text: 'Number Of Bags', value: 'no_of_bags' }, { text: 'Date and Time', value: 'created_at' }, { text: 'Actions', value: 'name', sortable: false }],
       search: '',
+      form: {
+        start_date: '',
+        end_date: ''
+      },
       loader: false,
       loading: false,
       dispAdd: false,
@@ -80622,6 +80645,18 @@ var EditMiller = __webpack_require__(135);
   },
 
   methods: {
+    sort: function sort() {
+      var _this = this;
+
+      this.loader = true;
+      axios.post('getMillerSort', this.form).then(function (response) {
+        _this.loader = false;
+        _this.AllMillers = response.data;
+      }).catch(function (error) {
+        _this.loader = false;
+        _this.errors = error.response.data.errors;
+      });
+    },
     openUser: function openUser() {
       this.dispAdd = true;
     },
@@ -80637,22 +80672,22 @@ var EditMiller = __webpack_require__(135);
       this.color = 'indigo';
     },
     del: function del(key, id) {
-      var _this = this;
+      var _this2 = this;
 
       if (confirm('Are you sure you want to delete this item?')) {
         this.loader = true;
         axios.delete('/millers/' + id).then(function (response) {
-          _this.AllMillers.splice(index, 1);
-          _this.loader = false;
-          _this.message = 'deleted successifully';
-          _this.color = 'red';
-          _this.snackbar = true;
+          _this2.AllMillers.splice(index, 1);
+          _this2.loader = false;
+          _this2.message = 'deleted successifully';
+          _this2.color = 'red';
+          _this2.snackbar = true;
         }).catch(function (error) {
-          _this.errors = error.response.data.errors;
-          _this.loader = false;
-          _this.message = 'something went wrong';
-          _this.color = 'red';
-          _this.snackbar = true;
+          _this2.errors = error.response.data.errors;
+          _this2.loader = false;
+          _this2.message = 'something went wrong';
+          _this2.color = 'red';
+          _this2.snackbar = true;
         });
       }
     },
@@ -80661,15 +80696,15 @@ var EditMiller = __webpack_require__(135);
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this3 = this;
 
     this.loader = true;
     axios.post('getMiller').then(function (response) {
-      _this2.loader = false;
-      _this2.AllMillers = response.data;
+      _this3.loader = false;
+      _this3.AllMillers = response.data;
     }).catch(function (error) {
-      _this2.loader = false;
-      _this2.errors = error.response.data.errors;
+      _this3.loader = false;
+      _this3.errors = error.response.data.errors;
     });
   }
 });
@@ -81853,6 +81888,68 @@ var render = function() {
                           "v-card-title",
                           [
                             _c(
+                              "v-flex",
+                              { attrs: { xs12: "", sm4: "" } },
+                              [
+                                _c("v-text-field", {
+                                  attrs: {
+                                    color: "blue darken-2",
+                                    type: "date",
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: _vm.form.start_date,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.form, "start_date", $$v)
+                                    },
+                                    expression: "form.start_date"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-flex",
+                              {
+                                attrs: { xs12: "", sm4: "", "offset-sm1": "" }
+                              },
+                              [
+                                _c("v-text-field", {
+                                  attrs: {
+                                    color: "blue darken-2",
+                                    type: "date",
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: _vm.form.end_date,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.form, "end_date", $$v)
+                                    },
+                                    expression: "form.end_date"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-flex",
+                              { attrs: { sm3: "" } },
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { color: "primary", flat: "" },
+                                    on: { click: _vm.sort }
+                                  },
+                                  [_vm._v("Sort")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
                               "v-btn",
                               {
                                 attrs: { color: "primary", flat: "" },
@@ -81900,9 +81997,9 @@ var render = function() {
                                   return [
                                     _c("td", [
                                       _vm._v(
-                                        "\n          " +
+                                        "\n              " +
                                           _vm._s(props.item.code) +
-                                          "\n        "
+                                          "\n           "
                                       )
                                     ]),
                                     _vm._v(" "),
@@ -81961,11 +82058,11 @@ var render = function() {
                                   var pageStop = ref.pageStop
                                   return [
                                     _vm._v(
-                                      "\n       From " +
+                                      "\n     From " +
                                         _vm._s(pageStart) +
                                         " to " +
                                         _vm._s(pageStop) +
-                                        "\n     "
+                                        "\n  "
                                     )
                                   ]
                                 }
@@ -81986,9 +82083,9 @@ var render = function() {
                               },
                               [
                                 _vm._v(
-                                  '\n       Your search for "' +
+                                  '\n     Your search for "' +
                                     _vm._s(_vm.search) +
-                                    '" found no results.\n     '
+                                    '" found no results.\n  '
                                 )
                               ]
                             )
@@ -87974,8 +88071,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 var ShowReport = __webpack_require__(165);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -88985,7 +89080,6 @@ var render = function() {
                                               _c("v-text-field", {
                                                 attrs: {
                                                   color: "blue darken-2",
-                                                  label: "Title",
                                                   type: "date",
                                                   required: ""
                                                 },
@@ -89030,7 +89124,6 @@ var render = function() {
                                               _c("v-text-field", {
                                                 attrs: {
                                                   color: "blue darken-2",
-                                                  label: "Title",
                                                   type: "date",
                                                   required: ""
                                                 },

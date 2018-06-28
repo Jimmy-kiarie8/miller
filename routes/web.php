@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('/getMiller', 'MilledController@getMiller')->name('getMiller');
 	Route::post('/getInvoice', 'InvoiceController@getInvoice')->name('getInvoice');
 	Route::post('/getReceipts', 'ReceiptController@getReceipts')->name('getReceipts');
+	Route::post('/getMillerSort', 'MilledController@getMillerSort')->name('getMillerSort');
 
 	// Reports
 	Route::post('/getBuyersReport/{id}', 'ReportController@getBuyersReport')->name('getBuyersReport');

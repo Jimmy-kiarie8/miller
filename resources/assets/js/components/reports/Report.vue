@@ -18,7 +18,6 @@
 							        	  <v-text-field
 							        	  v-model="form.start_date"
 							        	  color="blue darken-2"
-								          label="Title"
 								          type="date"
 								          required
 								      ></v-text-field>
@@ -29,7 +28,6 @@
 							        	  <v-text-field
 							        	  v-model="form.end_date"
 							        	  color="blue darken-2"
-								          label="Title"
 								          type="date"
 								          required
 								      ></v-text-field>
