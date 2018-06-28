@@ -149,6 +149,16 @@
             </div>
           </div>
         </router-link>
+        <router-link to="/reports" class="list__tile list__tile--link">
+          <div class="list__tile__action">
+            <v-icon color="black darken-2">settings</v-icon>
+          </div>
+          <div class="list__tile__content">
+            <div class="list__tile__title">
+              Reports
+            </div>
+          </div>
+        </router-link>
       </v-card>
 
     </template> 

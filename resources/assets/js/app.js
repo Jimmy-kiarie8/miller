@@ -33,7 +33,7 @@ let mySupply = require('./components/supply/Supply.vue')
 let myMiller = require('./components/miller/Miller.vue')
 let myInvoice = require('./components/invoices/Invoice.vue')
 let myReceipt = require('./components/receipt/Receipt.vue')
-let myTest = require('./components/test/Invoice.vue')
+let myReport = require('./components/reports/Report.vue')
 
 const routes = [
 	// {path: '/', component: myView},
@@ -47,7 +47,7 @@ const routes = [
 	{path: '/millers', component: myMiller},
 	{path: '/invoices', component: myInvoice},
 	{path: '/receipts', component: myReceipt},
-	{path: '/test', component: myTest},
+	{path: '/reports', component: myReport},
 ]
 const router = new VueRouter({
 // mode: 'history',
@@ -58,6 +58,6 @@ const app = new Vue({
     router,
     components: {
     	myHeader, myUser, mySociety, myBuyers, myCoffee, myUnits, myDerivery, myMiller,
-    	myInvoice, myReceipt, myTest
+    	myInvoice, myReceipt, myReport
     }
 });

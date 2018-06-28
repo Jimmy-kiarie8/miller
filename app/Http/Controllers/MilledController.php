@@ -24,6 +24,7 @@ class MilledController extends Controller
         $milled->grower_name = $request->grower_name;
         $milled->no_of_bags = $request->no_of_bags;
         $milled->no_of_pockets = $request->no_of_pockets;
+        $milled->start_weight = $request->start_weight;
         $milled->user_id = Auth::id();
         $milled->save();
         return $milled;
@@ -40,11 +41,11 @@ class MilledController extends Controller
     {        
         // return $request->all();
         $milled = Milled::find($request->id);
-        $milled->code = $request->code;
-        $milled->remarks = $request->remarks;
-        $milled->grower_name = $request->grower_name;
-        $milled->no_of_bags = $request->no_of_bags;
-        $milled->no_of_pockets = $request->no_of_pockets;
+        $start_weight = $milled->start_weight;
+        // return $start_weight;
+        $loss = $start_weight - $request->end_weight;
+        $milled->end_weight = $request->end_weight;
+        $milled->loss = $loss;
         $milled->save();
         return $milled;
     }

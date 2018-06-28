@@ -13,6 +13,11 @@ class Receipt extends Model {
 	];
 
 	public function products() {
-		return $this->hasMany(InvoiceProduct::class);
+		return $this->hasMany(ReceiptProduct::class);
 	}
+	
+    public function buyer()
+    {
+        return $this->belongsTo(Buyer::class);
+    }
 }

@@ -10,7 +10,7 @@
        <!-- users display -->
        <div>
         <v-card-title>
-         <v-btn color="primary" flat @click="openUser">Add Coffee Types</v-btn>
+         <v-btn color="primary" flat @click="openUser">Add Milling</v-btn>
          <v-spacer></v-spacer>
          <v-text-field
          v-model="search"
@@ -48,7 +48,7 @@
             <v-icon color="blue darken-2">visibility</v-icon>
           </v-btn> -->
           <v-btn flat color="blue darken-2" @click="editItem(props.item)">Edit</v-btn>
-          <v-btn flat color="pink darken-2"  @click="deleteItem(props.item)">Delete</v-btn>
+          <!-- <v-btn flat color="pink darken-2"  @click="deleteItem(props.item)">Delete</v-btn> -->
           <!-- <v-btn></v-btn> -->
           
         </td> 

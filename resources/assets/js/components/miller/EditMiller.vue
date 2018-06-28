@@ -1,99 +1,168 @@
 <template>
-
-  <!-- Edit User -->
-  <v-dialog v-model="openEditRequest" max-width="800px" persistent>
-    <v-card>
-      <v-card-title>
-        {{ editedItemCon.name }}
-      </v-card-title>
-      <v-card-text>
-        <v-form ref="form" @submit.prevent="update">
-          <v-container grid-list-xl fluid>
+  <v-layout row justify-center>
+    <v-dialog v-model="openEditRequest" persistent max-width="700px">
+      <v-card v-if="openEditRequest">
+        <v-card-title fixed>
+          <span class="headline">Add Milling</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12 sm12>
-                <v-text-field
-                v-model="editedItemCon.type"
-                :rules="rules.name"
-                color="purple darken-2"
-                label="Coffee Type"
-                required
-                ></v-text-field>
-                <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small>  -->
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                v-model="editedItemCon.description"
-                color="blue"
-                multi-line
-                >
-                <div slot="label">
-                  Description 
-                </div>
-              </v-text-field>
-            </v-flex>
+              <v-form ref="form" @submit.prevent>
+                <v-container grid-list-xl fluid>
+                  <v-layout wrap>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                      v-model="editedItemCon.code"
+                      :rules="rules.name"
+                      color="blue darken-2"
+                      label="Code"
+                      required
+                      disabled
+                      ></v-text-field>
+                      <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                      v-model="editedItemCon.grower_name"
+                      :rules="rules.name"
+                      color="blue darken-2"
+                      label="Grower Name"
+                      required
+                      disabled
+                      ></v-text-field>
+                      <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                      v-model="editedItemCon.no_of_bags"
+                      :rules="rules.name"
+                      color="blue darken-2"
+                      label="Number Of Bags"
+                      required
+                      disabled
+                      ></v-text-field>
+                      <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                      v-model="editedItemCon.no_of_pockets"
+                      :rules="rules.name"
+                      color="blue darken-2"
+                      label="Number Of Pockets"
+                      required
+                      disabled
+                      ></v-text-field>
+                      <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                      v-model="editedItemCon.start_weight"
+                      :rules="rules.name"
+                      color="blue darken-2"
+                      label="Start Weight (KG)"
+                      required
+                      disabled
+                      ></v-text-field>
+                      <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                      v-model="editedItemCon.end_weight"
+                      :rules="rules.name"
+                      color="blue darken-2"
+                      label="End Weight (KG)"
+                      required
+                      ></v-text-field>
+                      <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field
+                      v-model="editedItemCon.remarks"
+                      color="blue"
+                      multi-line
+                      >
+                      <div slot="label">
+                        Remark 
+                      </div>
+                    </v-text-field>
+                  </v-flex>
+                </v-layout>
+              </v-container>
+              <v-card-actions>
+                <v-btn flat @click="resetForm">reset</v-btn>
+                <v-btn flat @click="close">Close</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                :disabled="loading"
+                :loading="loading"
+                flat
+                color="primary"
+                @click="save"
+                >Submit</v-btn>
+              </v-card-actions>
+            </v-form>
           </v-layout>
         </v-container>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" flat @click.stop="close">Close</v-btn>
-      <v-spacer></v-spacer>
-      <v-btn 
-      color="primary" 
-      flat 
-      @click="update"
-      :loading="loading"
-      :disabled="loading"
-      >Update</v-btn>
-    </v-card-actions>
-  </v-card>
-</v-dialog>
-<!-- Edit User -->
-
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+</v-layout>
 </template>
 
 <script>
 export default {
-  props: ['editedItemCon', 'openEditRequest'],
+  props: ['openEditRequest', 'editedItemCon'],
+  components: {
+  },
   data() {
+    const defaultForm = Object.freeze({
+      remarks: '',
+      no_of_pockets: '',
+      no_of_bags: '',
+      grower_name: '',
+      code: '',
+    })
     return{
-      loader: false,
-      loading:false,
-      list: {},
+      errors: {},
+      defaultForm,
+      loading: false,
+      form: Object.assign({}, defaultForm),
       rules: {
         name: [val => (val || '').length > 0 || 'This field is required']
       },
     }
   },
   methods: {
-    update() {
+    save() {
       this.loading=true
-      axios.patch(`/millers/${this.editedItemCon.id}`, this.editedItemCon)
-      .then((response) => {
-        // console.log(response);
+      axios.patch(`/millers/${this.editedItemCon.id}`, this.editedItemCon).
+      then((response) => {
         this.loading=false
-        this.close;
-            // this.resetForm();
-            Object.assign(this.$parent.AllMillers[this.$parent.editedIndex], this.$parent.editedItem)
-            this.$emit('closeRequest');
-            this.$emit('alertRequest');
+        console.log(response.data);
+        // this.close;
+        // this.resetForm();
+        // this.$emit('closeRequest');
+        this.$emit('alertRequest');
+        Object.assign(this.$parent.AllMillers[this.$parent.editedIndex], this.$parent.editedItem)
+        // this.$parent.AllMillers.push(response.data) 
 
-          })
+      })
       .catch((error) => {
         this.errors = error.response.data.errors
         this.loading=false
       })
     },
-    /*resetForm () {
-        this.form = Object.assign({}, this.defaultForm)
-        this.$refs.form.reset()
-      },*/
-      close() {
-        this.$emit('closeRequest')
-      },
+    resetForm () {
+      this.form = Object.assign({}, this.defaultForm)
+      this.$refs.form.reset()
     },
-    mounted() {
+    close() {
+      this.$emit('closeRequest')
+    },
 
-    }
-  }
-  </script>
+  },
+ mounted() {
+ }
+}
+</script>

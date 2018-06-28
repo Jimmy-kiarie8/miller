@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::resource('millers', 'MilledController');
 	Route::resource('invoice', 'InvoiceController');
 	Route::resource('receipt', 'ReceiptController');
+	Route::resource('reports', 'ReportController');
 
 	Route::post('/getUsers', 'UserController@getUsers')->name('getUsers');
 	Route::post('/profile/{id}', 'UserController@profile')->name('profile');
@@ -46,4 +47,8 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('/getMiller', 'MilledController@getMiller')->name('getMiller');
 	Route::post('/getInvoice', 'InvoiceController@getInvoice')->name('getInvoice');
 	Route::post('/getReceipts', 'ReceiptController@getReceipts')->name('getReceipts');
+
+	// Reports
+	Route::post('/getBuyersReport/{id}', 'ReportController@getBuyersReport')->name('getBuyersReport');
+	Route::post('/getDerivery/{id}', 'ReportController@getDerivery')->name('getDerivery');
 });

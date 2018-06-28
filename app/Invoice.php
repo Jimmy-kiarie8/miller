@@ -17,4 +17,9 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceProduct::class);
     }
+
+    public function buyer()
+    {
+        return $this->belongsTo(Buyer::class);
+    }
 }

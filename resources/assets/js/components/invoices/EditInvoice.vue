@@ -6,7 +6,7 @@
           <span class="headline">Edit Invoice</span>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
+          <v-container grid-list-md v-if="openAddRequest">
             <v-layout wrap>
               <v-form ref="form" @submit.prevent>
                 <v-container grid-list-xl fluid>
@@ -177,7 +177,9 @@ export default {
       this.form.products.push({name: '', price: 0, qty: 1});
     },
     remove: function(product) {
-      this.form.products.$remove(product);
+      // this.form.products.$remove(product);
+      const index = this.invoiceData.products.indexOf(product)
+      this.receiptData.products.splice(index, 1);
     },
     /*resetForm () {
       this.form = Object.assign({}, this.defaultForm)
@@ -190,12 +192,16 @@ export default {
   },
 
   computed: {
-
-   subTotal: function() {
+  subTotal: function() {
      return this.invoiceData.products.reduce(function(carry, product) {
        return carry + (parseFloat(product.qty) * parseFloat(product.price));
      }, 0);
    },
+   /*subTotal: function() {
+     return this.invoiceData.products.reduce(function(carry, product) {
+       return carry + (parseFloat(product.qty) * parseFloat(product.price));
+     }, 0);
+   },*/
    grandTotal: function() {
      return this.subTotal - parseFloat(this.invoiceData.discount);
    }

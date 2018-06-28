@@ -3,7 +3,7 @@
     <v-dialog v-model="openAddRequest" persistent max-width="700px">
       <v-card>
         <v-card-title fixed>
-          <span class="headline">Add Society</span>
+          <span class="headline">Add Milling</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
@@ -47,6 +47,16 @@
                       :rules="rules.name"
                       color="blue darken-2"
                       label="Number Of Pockets"
+                      required
+                      ></v-text-field>
+                      <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                      v-model="form.start_weight"
+                      :rules="rules.name"
+                      color="blue darken-2"
+                      label="Weight (KG)"
                       required
                       ></v-text-field>
                       <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->

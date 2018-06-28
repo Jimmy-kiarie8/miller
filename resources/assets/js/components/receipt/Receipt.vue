@@ -5,13 +5,19 @@
 			<div v-show="loader" style="text-align: center; width: 100%; margin-top: 200px;">
 				<v-progress-circular :width="3" indeterminate color="red" style="margin: 1rem"></v-progress-circular>
 			</div>
-			<v-btn @click="receiptAdd" flat color="primary">Add Receipt</v-btn>
+			
+			
 			<v-layout justify-center align-center v-show="!loader">
 				<!-- <v-flex sm12>
 					<v-btn @click="receiptAdd" flat color="primary">Add receipt</v-btn>
 				</v-flex> -->
+			<div class="row">
+				<div class="col-md-12">
+					<v-btn @click="receiptAdd" flat color="primary">Add Receipt</v-btn>
+				</div>
 
 				<!-- <v-flex sm12> -->
+				<div class="col-md-12">
 				<table class="table table-hover table-striped table-responsive">
 					<thead>
 						<tr>
@@ -20,7 +26,7 @@
 							<th scope="col">Grand Total</th>
 							<th scope="col">Client</th>
 							<th scope="col">Due Date</th>
-							<th scope="col">Created On</th>
+							<!-- <th scope="col">Created On</th> -->
 							<th scope="col">Receipt Date</th>
 							<th scope="col">Action</th>
 						</tr>
@@ -30,18 +36,20 @@
 							<th scope="row">{{key+1}}</th>
 							<td>{{receipt.receipt_no}}</td>
 							<td>{{receipt.grand_total}}</td>
-							<td>{{receipt.client_id}}</td>
+							<td v-for="buyers in AllBuyers" v-if="receipt.client = buyers.id">{{buyers.name}}</td>
 							<td>{{receipt.due_date}}</td>
-							<td>{{receipt.created_at}}</td>
+							<!-- <td>{{receipt.created_at}}</td> -->
 							<td>{{receipt.receipt_date}}</td>
 							<td>
 								<v-btn @click="receiptEdit(receipt)" flat color="primary">Edit</v-btn>
 								<v-btn @click="receiptShow(receipt)" flat color="info">View</v-btn>
-								<v-btn @click="receiptdel(key, receipt.id)" flat color="danger">Delete</v-btn>
+								<!-- <v-btn @click="receiptdel(key, receipt.id)" flat color="danger">Delete</v-btn> -->
 							</td>
 						</tr>
 					</tbody>
 				</table>
+			</div>
+		</div>
 			<!-- </v-flex> -->
 			</v-layout>
 		</v-container>

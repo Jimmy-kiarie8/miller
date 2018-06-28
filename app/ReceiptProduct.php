@@ -10,6 +10,6 @@ class ReceiptProduct extends Model {
 	];
 
 	public function receipt() {
-		return $this->belongsTo(Invoice::class);
+		return $this->belongsTo(Receipt::class);
 	}
 }

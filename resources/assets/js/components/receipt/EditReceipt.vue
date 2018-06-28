@@ -6,7 +6,7 @@
           <span class="headline">Edit Receipt</span>
         </v-card-title>
         <v-card-text>
-          <v-container grid-list-md>
+          <v-container grid-list-md v-if="openAddRequest">
             <v-layout wrap>
               <v-form ref="form" @submit.prevent>
                 <v-container grid-list-xl fluid>
@@ -174,10 +174,12 @@ export default {
       })
     },
     addLine: function() {
-      this.form.products.push({name: '', price: 0, qty: 1});
+      this.receiptData.products.push({name: '', price: 0, qty: 1});
     },
     remove: function(product) {
-      this.form.products.$remove(product);
+      // this.receiptData.products.$remove(product);
+      const index = this.receiptData.products.indexOf(product)
+      this.receiptData.products.splice(index, 1);
     },
     /*resetForm () {
       this.form = Object.assign({}, this.defaultForm)

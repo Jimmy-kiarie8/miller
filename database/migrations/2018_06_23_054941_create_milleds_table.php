@@ -21,6 +21,8 @@ class CreateMilledsTable extends Migration
             $table->text('remarks');
             $table->integer('no_of_bags');
             $table->integer('no_of_pockets');
+            $table->date('start_weight');
+            $table->date('end_weight')->nullable();
             $table->timestamps();
         });
     }

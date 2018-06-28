@@ -172,7 +172,7 @@ export default {
         // this.resetForm();
         // this.$emit('closeRequest');
         this.$emit('alertRequest');
-        this.$parent.invoices.push(response.data) 
+        this.$parent.receipts.push(response.data) 
 
       })
       .catch((error) => {
@@ -193,7 +193,8 @@ export default {
       this.form.products.push({name: '', price: 0, qty: 1});
     },
     remove: function(product) {
-      this.form.products.$remove(product);
+      const index = this.form.products.indexOf(product)
+      this.form.products.splice(index, 1);
     },
 
   },
