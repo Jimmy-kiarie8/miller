@@ -26,7 +26,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::resource('society', 'SocietyController');
 	Route::resource('buyers', 'BuyerController');
 	Route::resource('coffee', 'CoffeeTypeController');
-	Route::resource('coffee', 'PackingUnitController');
+	Route::resource('units', 'PackingUnitController');
 	Route::resource('derivery', 'DeriveryController');
 	Route::resource('supply', 'SupplyController');
 	Route::resource('millers', 'MilledController');
@@ -47,7 +47,15 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('/getMiller', 'MilledController@getMiller')->name('getMiller');
 	Route::post('/getInvoice', 'InvoiceController@getInvoice')->name('getInvoice');
 	Route::post('/getReceipts', 'ReceiptController@getReceipts')->name('getReceipts');
+
+	// Sort
 	Route::post('/getMillerSort', 'MilledController@getMillerSort')->name('getMillerSort');
+	Route::post('/getInvoiceSort', 'InvoiceController@getInvoiceSort')->name('getInvoiceSort');
+	Route::post('/getReceiptSort', 'ReceiptController@getReceiptSort')->name('getReceiptSort');
+
+	Route::post('/fewUsers', 'UserController@fewUsers')->name('fewUsers');
+	Route::post('/fewSocieties', 'SocietyController@fewSocieties')->name('fewSocieties');
+	Route::post('/fewBuyers', 'BuyerController@fewBuyers')->name('fewBuyers');
 
 	// Reports
 	Route::post('/getBuyersReport/{id}', 'ReportController@getBuyersReport')->name('getBuyersReport');

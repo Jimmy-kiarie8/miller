@@ -22,6 +22,8 @@ class CreateReceiptsTable extends Migration {
 			$table->decimal('sub_total');
 			$table->decimal('discount');
 			$table->decimal('grand_total');
+			$table->decimal('vat');
+			$table->string('currency');
 			$table->timestamps();
 		});
 	}

@@ -162,8 +162,8 @@ export default {
 
       })
       .catch((error) => {
-        this.errors = error.response.data.errors
         this.loading=false
+        this.errors = error.response.data.errors
       })
     },
     resetForm () {

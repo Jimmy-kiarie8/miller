@@ -53,10 +53,18 @@
                       <label for="password" class="col-md-4 col-form-label text-md-right">Select buyers</label>
                       <div class="col-md-6">
                           <select class="custom-select" v-model="form.client">
-                            <option v-for="element in buyers" data-subtext="" :value="element.id">{{element.name}}</option>
+                            <option v-for="element in buyers" data-subtext="" :value="element.client_id">{{element.name}}</option>
                           </select>
                       </div>
                     </div>
+                      <div class="form-group col-md-4">
+                        <label for="password" class="col-md-12 col-form-label text-md-right">Select Incoice</label>
+                        <div class="col-md-12">
+                            <select class="custom-select" v-model="form.invoice_id">
+                              <option v-for="element in invoices" data-subtext="" :value="element.invoice_no">{{element.invoice_no}}</option>
+                            </select>
+                        </div>
+                      </div>
 
                     <table class="table table-bordered table-form">
                         <thead>
@@ -153,7 +161,9 @@ export default {
     })
     return{
       errors: {},
+      invoices: {},
       defaultForm,
+      society: {},
       loading: false,
       form: Object.assign({}, defaultForm),
       rules: {
@@ -218,6 +228,21 @@ export default {
    }
  },
  mounted() {
+  axios.post('getSociety')
+    .then((response) => { 
+    this.society = response.data
+  })
+  .catch((error) => {
+    this.errors = error.response.data.errors
+  })
+
+  axios.post('getInvoice')
+    .then((response) => {
+    this.invoices = response.data
+  })
+  .catch((error) => {
+    this.errors = error.response.data.errors
+  })
  }
 }
 </script>

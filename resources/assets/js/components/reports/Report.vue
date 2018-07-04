@@ -61,7 +61,7 @@
 
 					<!-- Derivery Reports -->
 					<v-flex sm6>
-						<h4 class="text-center">Derivery Reports</h4>
+						<h4 class="text-center">Delivery Reports</h4>
 						<v-card>
 							<v-form ref="form" @submit.prevent>
 							  	<v-container grid-list-xl fluid>
@@ -122,6 +122,7 @@
 	:editedItemCon="editedItem" 
 	:report="NewReport"
 	:stateR="state"
+	:AllBuyers="buyers"
 ></ShowReport>
 </div>
 </template>

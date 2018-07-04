@@ -67,7 +67,7 @@ export default {
   methods: {
     update() {
       this.loading=true
-      axios.patch(`/coffee/${this.editedItemCon.id}`, this.editedItemCon)
+      axios.patch(`/units/${this.editedItemCon.id}`, this.editedItemCon)
       .then((response) => {
         // console.log(response);
         this.loading=false

@@ -1,6 +1,6 @@
 <template>
 <v-layout row justify-center>
-	<v-dialog v-model="openRequest" persistent max-width="900px">
+	<v-dialog v-model="openRequest" persistent max-width="1200px">
 		<v-card v-if="openRequest">
 			<v-card-title fixed>
 				<span class="headline">Reports</span>
@@ -11,37 +11,49 @@
 					<v-layout wrap v-if="stateR === 'client'">
 						<!-- Invoices -->
 						<h2 class="text-center">Invoices</h2>
-						<table class="table table-hover table-striped table-responsive">
-							<thead v-if="report.invoicesArr.length > 0">
+						<table class="table table-hover table-striped table-responsive" v-if="report.invoicesArr.length > 0">
+							<thead>
 								<tr>
 									<th scope="col">#</th>
-									<th scope="col">Client Id</th>
+									<th scope="col">Client Name</th>
 									<th scope="col">Invoice Number</th>
-									<th scope="col">Grand Total</th>
+									<th scope="col">Invoiced</th>
+									<!-- <th scope="col">Receipt Number</th> -->
 									<th scope="col">Due Date</th>
-									<th scope="col">Created On</th>
 									<th scope="col">Invoice Date</th>
+									<th scope="col">Paid</th>
+									<th scope="col">Balance</th>
 								</tr>
 							</thead>
-							<tbody v-if="report.invoicesArr.length > 0">
+							<tbody>
 								<tr v-for="invoice, key in report.invoicesArr" :key="invoice.id">
 									<th scope="row">{{key+1}}</th>
+									<!-- <td v-for="client in report.client" v-if="invoice.client === client.id">{{client.name}}</td> -->
 									<td>{{invoice.client}}</td>
 									<td>{{invoice.invoice_no}}</td>
 									<td>{{invoice.grand_total}}</td>
+									<!-- <td>{{invoice.grand_total}}</td> -->
 									<td>{{invoice.due_date}}</td>
-									<td>{{invoice.created_at}}</td>
 									<td>{{invoice.invoice_date}}</td>
+									<td>{{invoice.paid}}</td>
+									<td>{{invoice.balance}}</td>
 								</tr>
 							</tbody>
-							<thead v-else class="text-center">
-								No Invoices
-							</thead>
+							<!-- <tfoot>
+							    <tr>
+							        <td class="table-empty" colspan="2"></td>
+							        <td class="table-label">Balance</td>
+							        <td class="table-amount">{{report.balance}}</td>
+							    </tr>
+							</tfoot> -->
 						</table>	
+						<div v-else class="text-center">
+							No Transactions
+						</div>
 						<!-- Invoices -->
 
 						<!-- Receipts -->
-						<h2 class="text-center">Receipts</h2>
+						<!-- <h2 class="text-center">Receipts</h2>
 						<table class="table table-hover table-striped table-responsive">
 							<thead v-if="report.receiptsArr.length > 0">
 								<tr>
@@ -69,14 +81,7 @@
 								No Invoices
 							</thead>
 
-							<tfoot>
-							    <tr>
-							        <td class="table-empty" colspan="2"></td>
-							        <td class="table-label">Balance</td>
-							        <td class="table-amount">{{report.balance}}</td>
-							    </tr>
-							</tfoot>
-						</table>						
+						</table>	 -->					
 						<!-- Receipts -->
 					</v-layout>
 					<!-- Buyers Report -->
@@ -143,7 +148,7 @@
 
 <script>
 export default{
-	props: ['openRequest', 'report', 'stateR'],
+	props: ['openRequest', 'report', 'stateR', 'AllBuyers'],
 	data() {
 		return{
 

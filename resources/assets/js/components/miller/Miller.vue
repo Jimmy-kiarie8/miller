@@ -48,7 +48,7 @@
           class="elevation-1"
           >
           <template slot="items" slot-scope="props">
-             <td>
+           <td>
               {{ props.item.code }}
            </td>
            <td class="text-xs-right">{{ props.item.grower_name }}</td>
@@ -56,6 +56,7 @@
            <td class="text-xs-right">{{ props.item.no_of_bags }}</td>
            <td class="text-xs-right">{{ props.item.no_of_pockets }}</td>
            <td class="text-xs-right">{{ props.item.created_at }}</td>
+           <td class="text-xs-right">{{ props.item.loss }}</td>
            <td class="justify-center layout px-0">
              <!-- <v-btn icon class="mx-0" @click="editItem(props.item)">
               <v-icon color="blue darken-2">edit</v-icon>
@@ -118,9 +119,10 @@ export default {
    { text: 'Code', align: 'left', value: 'code'},
    { text: 'Grower Name', value: 'grower_name' },
    { text: 'Remarks', value: 'remarks' },
-   { text: 'Number Of Porkets', value: 'no_of_pockets' },
+   { text: 'Number Of Pockets', value: 'no_of_pockets' },
    { text: 'Number Of Bags', value: 'no_of_bags' },
    { text: 'Date and Time', value: 'created_at' },
+   { text: 'Loss', value: 'loss' },
    { text: 'Actions', value: 'name', sortable: false }
    ],
    search: '',
@@ -135,10 +137,13 @@ export default {
    pdialog2: false,
    snackbar: false,
    timeout: 5000,
+   searchQuery: '',
    color: '',
    message: '',
+   temp: '',
    AllMillers: [],
    editedItem: {},
+   millinngdata: {},
    emailRules: [
    v => {
       return !!v || 'E-mail is required'
@@ -212,7 +217,7 @@ mounted() {
  axios.post('getMiller')
  .then((response) => {
   this.loader=false
-  this.AllMillers = response.data
+  this.AllMillers = this.temp = response.data
 })
  .catch((error) => {
   this.loader=false
@@ -228,6 +233,25 @@ mounted() {
     }
   })
 }*/
+
+    watch: {
+      searchQuery() {
+          if (this.searchQuery.length > 0) {
+          this.temp = this.lists.filter((item) => {
+            return item.created_at.indexOf(this.searchQuery)>-1
+          });
+        }else{
+          this.temp = this.lists
+        }
+      }
+    },
+  computed :{
+     /*millinng: function() {
+        return this.AllMillers.filter({created_at});
+        // this.form.AllMillers = 
+        // return this.millinngdata = mill;
+     }*/
+  }
 }
 </script>
 

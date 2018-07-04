@@ -10,7 +10,7 @@
        <!-- users display -->
        <div>
         <v-card-title>
-         <v-btn color="primary" flat @click="openUser">Add Derivery</v-btn>
+         <v-btn color="primary" flat @click="openUser">Add Delivery</v-btn>
          <v-spacer></v-spacer>
          <v-text-field
          v-model="search"

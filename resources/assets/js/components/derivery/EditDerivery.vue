@@ -43,7 +43,7 @@
                 v-model="editedItemCon.vihicle_reg"
                 :rules="rules.name"
                 color="blue darken-2"
-                label="Vihicle Regestration"
+                label="Vehicle Regestration"
                 required
                 ></v-text-field>
                 <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->

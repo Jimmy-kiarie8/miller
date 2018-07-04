@@ -18,7 +18,7 @@
                 <input type="file" @change="Getimage" accept="image/*" style="display: none" ref="fileInput">
                 <!-- <img v-show="imagePlaced" :src="avatar" style="width: 300px; height: 240px;"> -->
                 <img v-show="imagePlaced" :src="avatar" style="width: 200px; height: 200px;">
-                <v-btn @click="upload" flat v-show="imagePlaced">Upload</v-btn>
+                <v-btn @click="upload" flat v-show="imagePlaced" :loading="loading" :disabled="loading">Upload</v-btn>
                 <v-btn @click="cancle" flat v-show="imagePlaced">Cancle</v-btn>
               </v-card>
             </v-flex>
@@ -119,16 +119,6 @@
                          thumb-label
                        ></v-slider>
                      </v-flex>
-                    <div class="form-group">
-                      <vue-google-autocomplete
-                      ref="address"
-                      id="map"
-                      classname="form-control col-md-12"
-                      placeholder="Please type your address"
-                      v-on:placechanged="getAddressData"
-                      country="ke"
-                      ></vue-google-autocomplete>
-                    </div>
                   </v-layout>
                 </v-container>
                 <v-card-actions>
@@ -153,11 +143,9 @@
 </template>
 
 <script>
-import VueGoogleAutocomplete from 'vue-google-autocomplete'
 export default {
   props: ['user'],
   components: {
-    VueGoogleAutocomplete
   },
   data () {
     const defaultForm = Object.freeze({
@@ -168,6 +156,7 @@ export default {
     })
     return {
       address: '',
+      loading: false,
       imagePlaced: false,
       defaultForm,
       avatar: '',
@@ -224,14 +213,20 @@ export default {
     },
 
     upload() {
+      this.loading=true
       axios.post(`/profile/${this.user.id}`, this.file)
       .then((response) => {
+        this.loading=false
         console.log(response);
         this.imagePlaced = false;
         this.color = 'black';
         this.text = 'Profile image updated';
         this.snackbar = true;
         // this.close()
+      })
+      .catch((error) => {
+        this.loading=false
+        this.errors = error.response.data.errors
       })
     },
     cancle() {
@@ -259,9 +254,6 @@ export default {
       })
     },
 
-    getAddressData: function (addressData, placeResultData, id) {
-      this.address = addressData;
-    },
   },
 
   computed: {

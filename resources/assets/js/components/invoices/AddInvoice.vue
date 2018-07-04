@@ -50,10 +50,19 @@
                       <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->
                     </v-flex>
                     <div class="form-group col-md-4">
-                      <label for="password" class="col-md-4 col-form-label text-md-right">Select buyers</label>
+                      <label for="buyers" class="col-md-4 col-form-label text-md-right">Select buyers</label>
                       <div class="col-md-6">
                           <select class="custom-select" v-model="form.client">
-                            <option v-for="element in buyers" data-subtext="" :value="element.id">{{element.name}}</option>
+                            <option v-for="element in buyers" data-subtext="" :value="element.client_id">{{element.name}}</option>
+                          </select>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="currency" class="col-md-4 col-form-label text-md-right">Currency</label>
+                      <div class="col-md-6">
+                          <select class="custom-select" v-model="form.currency">
+                            <option data-subtext="" value="KSH">KSH</option>
+                            <option data-subtext="" value="USD">USD</option>
                           </select>
                       </div>
                     </div>
@@ -92,7 +101,7 @@
                                     <span @click="addLine" class="table-add_line">Add Line</span>
                                 </td>
                                 <td class="table-label">Sub Total</td>
-                                <td class="table-amount">@{{subTotal}}</td>
+                                <td class="table-amount">{{form.currency}} {{subTotal}}</td>
                             </tr>
                             <tr>
                                 <td class="table-empty" colspan="2"></td>
@@ -104,7 +113,8 @@
                             <tr>
                                 <td class="table-empty" colspan="2"></td>
                                 <td class="table-label">Grand Total</td>
-                                <td class="table-amount">@{{grandTotal}}</td>
+                                <td class="table-amount">{{form.currency}} {{grandTotal}}</td>
+                                <td class="table-amount">VAT: {{vat}}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -154,6 +164,7 @@ export default {
     return{
       errors: {},
       defaultForm,
+      randomNumber: '',
       loading: false,
       form: Object.assign({}, defaultForm),
       rules: {
@@ -214,9 +225,34 @@ export default {
        return carry + (parseFloat(product.qty) * parseFloat(product.price));
      }, 0);
    },
+   vat: function() {
+     return this.grandTotal * parseFloat(0.16);
+     // (this.subTotal - parseFloat(this.form.discount)) * parseFloat(0.16);
+   },
    grandTotal: function() {
      return this.subTotal - parseFloat(this.form.discount);
-   }
+   },
+   // random() {
+  /*  random : {
+        get : function() {
+          // var num = Math.random()*1000;
+          return 'INV_'+numArr;
+           // return this.firstName+" "+this.lastName;
+        },
+        set : function(name) {
+          var num = Math.random()*1000;
+          var numSplit = name.split(".");
+          var numArr = numSplit[0];
+           // var fname = name.split(" ");
+           // this.firstName = fname[0];
+           // this.lastName = fname[1]
+          this.form.invoice_no = 'INV_'+numArr;
+        }
+     }*/
+      // var num = Math.random()*1000;
+      // var numSplit = num.split(".");
+      // var numArr = numSplit[0];
+   // }
  },
  mounted() {
  }

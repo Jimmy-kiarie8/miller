@@ -9,15 +9,15 @@ class Receipt extends Model {
 		'receipt_no', 'receipt_date', 'due_date',
 		'title', 'sub_total', 'discount',
 		'grand_total', 'client',
-		'client_address',
+		'client_address', 'invoice_id', 'vat'
 	];
 
 	public function products() {
 		return $this->hasMany(ReceiptProduct::class);
 	}
-	
-    public function buyer()
-    {
-        return $this->belongsTo(Buyer::class);
-    }
+
+	public function invoice() {
+		return $this->belongsTo(Invoice::class);
+	}
+
 }

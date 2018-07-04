@@ -20,7 +20,7 @@ Vue.use(Vuetify)
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+// Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 let myHeader = require('./components/include/Header.vue')
 let myUser = require('./components/users/User.vue')
@@ -34,9 +34,11 @@ let myMiller = require('./components/miller/Miller.vue')
 let myInvoice = require('./components/invoices/Invoice.vue')
 let myReceipt = require('./components/receipt/Receipt.vue')
 let myReport = require('./components/reports/Report.vue')
+let myDashboard = require('./components/Dashboard.vue')
+let myProfile = require('./components/users/Profile.vue')
 
 const routes = [
-	// {path: '/', component: myView},
+	{path: '/', component: myDashboard},
 	{path: '/users', component: myUser},
 	{path: '/society', component: mySociety},
 	{path: '/buyers', component: myBuyers},
@@ -48,6 +50,7 @@ const routes = [
 	{path: '/invoices', component: myInvoice},
 	{path: '/receipts', component: myReceipt},
 	{path: '/reports', component: myReport},
+	// {path: '/profile', component: myProfile},
 ]
 const router = new VueRouter({
 // mode: 'history',
@@ -58,6 +61,6 @@ const app = new Vue({
     router,
     components: {
     	myHeader, myUser, mySociety, myBuyers, myCoffee, myUnits, myDerivery, myMiller,
-    	myInvoice, myReceipt, myReport
+    	myInvoice, myReceipt, myReport, myDashboard, myProfile
     }
 });

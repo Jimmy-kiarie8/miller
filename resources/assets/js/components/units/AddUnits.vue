@@ -77,10 +77,10 @@ export default {
   methods: {
     save() {
       this.loading=true
-      axios.post('/coffee', this.$data.form).
+      axios.post('/units', this.$data.form).
       then((response) => {
         this.loading=false
-        console.log(response.data);
+        // console.log(response.data);
         // this.close;
         // this.resetForm();
         // this.$emit('closeRequest');

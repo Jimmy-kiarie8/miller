@@ -15,11 +15,14 @@ class BuyerController extends Controller {
 	 */
 	public function store(Request $request) {
 		// return $request->all();
+		$client_id = 'CLIENT_' . rand(1, 10);
 		$buyer = new Buyer;
 		$buyer->name = $request->name;
 		$buyer->email = $request->email;
 		$buyer->phone = $request->phone;
 		$buyer->status = 0;
+		$buyer->client_id = 'CLIENT_' . rand(1, 1000);
+		// return $client_id;
 		$buyer->location = $request->location;
 		$buyer->user_id = Auth::id();
 		$buyer->save();
@@ -57,5 +60,9 @@ class BuyerController extends Controller {
 
 	public function getBuyers() {
 		return Buyer::all();
+	}
+
+	public function fewBuyers() {
+		return Buyer::orderBy('created_at', 'DESC')->limit(5)->get();
 	}
 }

@@ -3,7 +3,7 @@
     <v-dialog v-model="openAddRequest" persistent max-width="900px">
       <v-card>
         <v-card-title fixed>
-          <span class="headline">Add Derivery</span>
+          <span class="headline">Add Delivery</span>
         </v-card-title>
         <v-card-text>
           <v-container grid-list-md>
@@ -44,7 +44,7 @@
                       v-model="form.vihicle_reg"
                       :rules="rules.name"
                       color="blue darken-2"
-                      label="Vihicle Regestration"
+                      label="Vehicle Regestration"
                       required
                       ></v-text-field>
                       <!-- <small class="has-text-danger" v-if="errors.name">{{ errors.name[0] }}</small> -->

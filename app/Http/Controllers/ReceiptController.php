@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Buyer;
+use App\Invoice;
 use App\Receipt;
 use App\ReceiptProduct;
 use Illuminate\Http\Request;
@@ -17,6 +19,7 @@ class ReceiptController extends Controller {
 		$this->validate($request, [
 			'receipt_no' => 'required|alpha_dash|unique:receipts',
 			'client' => 'required|max:255',
+			'currency' => 'required',
 			// 'client_address' => 'required|max:255',
 			'receipt_date' => 'required|date_format:Y-m-d',
 			'due_date' => 'required|date_format:Y-m-d',
@@ -24,7 +27,8 @@ class ReceiptController extends Controller {
 			'discount' => 'required|numeric|min:0',
 			'products.*.name' => 'required|max:255',
 			'products.*.price' => 'required|numeric|min:1',
-			'products.*.qty' => 'required|integer|min:1',
+			'products.*.price' => 'required|numeric|min:1',
+			'invoice_id' => 'required|min:1',
 		]);
 
 		$products = collect($request->products)->transform(function ($product) {
@@ -35,24 +39,54 @@ class ReceiptController extends Controller {
 
 		if ($products->isEmpty()) {
 			return response()
-				->json([
-					'products_empty' => ['One or more Product is required.'],
-				], 422);
+			->json([
+				'products_empty' => ['One or more Product is required.'],
+			], 422);
 		}
 
 		$data = $request->except('products');
+		$receipt_no = 'REC_' . $data['receipt_no'];
 		$data['sub_total'] = $products->sum('total');
 		$data['grand_total'] = $data['sub_total'] - $data['discount'];
+		$data['receipt_no'] = $receipt_no;
+		$data['invoice_id'] = $data['invoice_id'];
 
-		$receipt = Receipt::create($data);
+		;
+		if ($receipt = Receipt::create($data)) {
+			// debit the Client 
+			$client = Buyer::where('client_id', $data['client'])->first();
+		    $transaction_2 = $client->journal->debitDollars($data['grand_total']);
+		    // return response()
+		    // ->json($transaction_2);
+		    // check our balance (should be 25)
+		    // $current_balance = $user->journal->getCurrentBalanceInDollars();
+		    
+		    //get the product referenced in the journal (optional)
+		    // $product_copy = $transaction_1->getReferencedObject()
 
-		$receipt->products()->saveMany($products);
+			if ($receipt->products()->saveMany($products)) {
+				$invoice = Invoice::where('invoice_no', $data['invoice_id'])->first();
+				// $balance = $invoice->balance;
+				// foreach ($invoice as $element) {
+				// return $invoice;
+				$balance = $invoice->balance;
+				// }
+				$paid = $invoice->paid;
+				// return $value;
+				$receipted = $data['grand_total'];
+				$new_balance = $balance - $receipted;
+				$invoice->balance = $new_balance;
+				$invoice->paid = $paid + $data['grand_total'];
+				// return $diff;
+				$invoice->save();
+			}
+		} else {
+			return response()
+		          ->json('failed');
+		}
 
 		return response()
-			->json([
-				'created' => true,
-				'id' => $receipt->id,
-			]);
+		->json($invoice);
 	}
 
 	/**
@@ -86,9 +120,9 @@ class ReceiptController extends Controller {
 
 		if ($products->isEmpty()) {
 			return response()
-				->json([
-					'products_empty' => ['One or more Product is required.'],
-				], 422);
+			->json([
+				'products_empty' => ['One or more Product is required.'],
+			], 422);
 		}
 
 		$data = $request->except('products');
@@ -102,10 +136,10 @@ class ReceiptController extends Controller {
 		$receipt->products()->saveMany($products);
 
 		return response()
-			->json([
-				'updated' => true,
-				'id' => $receipt->id,
-			]);
+		->json([
+			'updated' => true,
+			'id' => $receipt->id,
+		]);
 	}
 
 	/**
@@ -120,5 +154,9 @@ class ReceiptController extends Controller {
 
 	public function getReceipts() {
 		return Receipt::with('products')->get();
+	}
+
+	public function getReceiptSort(Request $request) {
+		return Receipt::whereBetween('created_at', [$request->start_date, $request->end_date])->get();
 	}
 }

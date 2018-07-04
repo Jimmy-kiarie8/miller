@@ -53,7 +53,7 @@
                       <label for="password" class="col-md-4 col-form-label text-md-right">Select buyers</label>
                       <div class="col-md-6">
                           <select class="custom-select" v-model="receiptData.client_id">
-                            <option v-for="element in buyers" data-subtext="" :value="element.id">{{element.name}}</option>
+                            <option v-for="element in buyers" data-subtext="" :value="element.client_id">{{element.name}}</option>
                           </select>
                       </div>
                     </div>
